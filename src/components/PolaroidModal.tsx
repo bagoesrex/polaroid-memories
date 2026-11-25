@@ -44,8 +44,17 @@ export function PolaroidModal({
     >
       <div
         className="flip-scene"
+        role="button"
+        tabIndex={0}
         title="Klik untuk membalik foto"
+        aria-label="Balik foto polaroid"
         onClick={handleToggleFlip}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleToggleFlip();
+          }
+        }}
       >
         <div className={`flip-card ${isFlipped ? 'flipped' : ''}`}>
           <div className="flip-face flip-front">

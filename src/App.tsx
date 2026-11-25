@@ -35,7 +35,17 @@ export default function App() {
   const [activeModal, setActiveModal] = useState<ActiveModal>(null);
   const [selectedPrintIndex, setSelectedPrintIndex] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Timer tracking for cleanup on unmount
   const toastTimerRef = useRef<number | null>(null);
+  const shutterTimersRef = useRef<number[]>([]);
+
+  useEffect(() => {
+    return () => {
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+      shutterTimersRef.current.forEach((id) => clearTimeout(id));
+    };
+  }, []);
 
   const showToast = useCallback((msg: string) => {
     setToastMessage(msg);
@@ -72,7 +82,7 @@ export default function App() {
     setIsDeveloped(false);
 
     // 90ms: Release recoil and flash fading
-    window.setTimeout(() => {
+    const t1 = window.setTimeout(() => {
       setFlashState('fading');
       setFlashGlow(false);
       setCameraRecoil(false);
@@ -80,12 +90,12 @@ export default function App() {
     }, 90);
 
     // 420ms: Start chemical developing
-    window.setTimeout(() => {
+    const t2 = window.setTimeout(() => {
       setIsDeveloped(true);
     }, 420);
 
     // 2550ms: Complete ejection and land on desk
-    window.setTimeout(() => {
+    const t3 = window.setTimeout(() => {
       setCurrentShot(shotIndex + 1);
       setPrintedMemories((prev) => [...prev, mem]);
       setIsEjecting(false);
@@ -95,6 +105,8 @@ export default function App() {
         showToast(`Roll selesai! Ada surat terlipat untuk ${config.recipient}.`);
       }
     }, 2550);
+
+    shutterTimersRef.current = [t1, t2, t3];
   }, [isBusy, currentShot, totalShots, soundEnabled, config.recipient, showToast]);
 
   // Open photo flip modal
@@ -125,6 +137,7 @@ export default function App() {
     if (isBusy) return;
     setCurrentShot(0);
     setPrintedMemories([]);
+    setSelectedPrintIndex(null);
     setIsEjecting(false);
     setIsDeveloped(false);
     setEjectingMemory(null);
@@ -222,31 +235,36 @@ export default function App() {
 
       <BrandFooter onOpenEditor={() => setActiveModal('editor')} />
 
-      <PolaroidModal
-        key={selectedPrintIndex ?? -1}
-        isOpen={activeModal === 'polaroid' && selectedPrintIndex !== null}
-        memory={
-          selectedPrintIndex !== null ? MEMORIES[selectedPrintIndex] : null
-        }
-        index={selectedPrintIndex ?? 0}
-        sender={config.sender}
-        onClose={() => setActiveModal(null)}
-        onPlayFlipSound={() => playPaperFlipSfx(soundEnabled)}
-      />
+      {activeModal === 'polaroid' && selectedPrintIndex !== null && (
+        <PolaroidModal
+          isOpen
+          memory={MEMORIES[selectedPrintIndex]}
+          index={selectedPrintIndex}
+          sender={config.sender}
+          onClose={() => {
+            setActiveModal(null);
+            setSelectedPrintIndex(null);
+          }}
+          onPlayFlipSound={() => playPaperFlipSfx(soundEnabled)}
+        />
+      )}
 
-      <LetterModal
-        isOpen={activeModal === 'letter'}
-        config={config}
-        onClose={() => setActiveModal(null)}
-      />
+      {activeModal === 'letter' && (
+        <LetterModal
+          isOpen
+          config={config}
+          onClose={() => setActiveModal(null)}
+        />
+      )}
 
-      <EditorModal
-        key={activeModal === 'editor' ? 'editor-open' : 'editor-closed'}
-        isOpen={activeModal === 'editor'}
-        config={config}
-        onSave={handleSaveConfig}
-        onClose={() => setActiveModal(null)}
-      />
+      {activeModal === 'editor' && (
+        <EditorModal
+          isOpen
+          config={config}
+          onSave={handleSaveConfig}
+          onClose={() => setActiveModal(null)}
+        />
+      )}
 
       <Toast message={toastMessage} />
     </>

@@ -17,8 +17,16 @@ export function EjectBay({
     <div className={`eject-bay ${isEjecting ? 'ejecting' : ''}`}>
       <div
         className="ejecting-card"
+        role="button"
+        tabIndex={0}
         title="Klik untuk melihat foto"
         onClick={onCardClick}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onCardClick();
+          }
+        }}
       >
         <div
           className={`ejecting-photo-frame ${isDeveloped ? 'developed' : ''}`}

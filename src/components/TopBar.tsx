@@ -8,7 +8,7 @@ export function TopBar({ soundEnabled, onToggleSound, onOpenEditor }: TopBarProp
   return (
     <header className="top-bar">
       <button type="button" className="pill-btn" onClick={onOpenEditor}>
-        <span>✎</span>
+        <span aria-hidden="true">✎</span>
         <span>Edit Demo</span>
       </button>
       <button
@@ -17,7 +17,7 @@ export function TopBar({ soundEnabled, onToggleSound, onOpenEditor }: TopBarProp
         aria-pressed={soundEnabled}
         onClick={onToggleSound}
       >
-        <span>♪</span>
+        <span aria-hidden="true">♪</span>
         <span>{soundEnabled ? 'Suara Aktif' : 'Suara Mati'}</span>
       </button>
     </header>
