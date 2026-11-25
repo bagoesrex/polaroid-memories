@@ -1,0 +1,37 @@
+import type { Memory } from '../types';
+
+interface EjectBayProps {
+  isEjecting: boolean;
+  isDeveloped: boolean;
+  memory: Memory | null;
+  onCardClick: () => void;
+}
+
+export function EjectBay({
+  isEjecting,
+  isDeveloped,
+  memory,
+  onCardClick,
+}: EjectBayProps) {
+  return (
+    <div className={`eject-bay ${isEjecting ? 'ejecting' : ''}`}>
+      <div
+        className="ejecting-card"
+        title="Klik untuk melihat foto"
+        onClick={onCardClick}
+      >
+        <div
+          className={`ejecting-photo-frame ${isDeveloped ? 'developed' : ''}`}
+        >
+          {memory && (
+            <img
+              src={memory.image}
+              alt={memory.caption}
+            />
+          )}
+        </div>
+        <p className="ejecting-caption">{memory ? memory.caption : ''}</p>
+      </div>
+    </div>
+  );
+}
