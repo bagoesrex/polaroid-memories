@@ -1,8 +1,10 @@
+import { memo } from 'react';
+
 interface BrandFooterProps {
   onOpenEditor: () => void;
 }
 
-export function BrandFooter({ onOpenEditor }: BrandFooterProps) {
+export const BrandFooter = memo(function BrandFooter({ onOpenEditor }: BrandFooterProps) {
   return (
     <footer className="brand-footer">
       <p className="brand-tag">MADE WITH GIFTKUY.ID</p>
@@ -16,4 +18,4 @@ export function BrandFooter({ onOpenEditor }: BrandFooterProps) {
       </button>
     </footer>
   );
-}
+});

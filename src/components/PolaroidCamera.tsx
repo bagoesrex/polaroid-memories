@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { Memory } from '../types';
 import { EjectBay } from './EjectBay';
 
@@ -16,7 +17,7 @@ interface PolaroidCameraProps {
   onEjectingCardClick: () => void;
 }
 
-export function PolaroidCamera({
+export const PolaroidCamera = memo(function PolaroidCamera({
   stickyNote,
   remainingCount,
   currentShot,
@@ -117,4 +118,4 @@ export function PolaroidCamera({
       <p className="camera-hint">{hintText}</p>
     </div>
   );
-}
+});

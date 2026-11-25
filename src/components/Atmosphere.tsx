@@ -1,8 +1,10 @@
+import { memo } from 'react';
+
 interface AtmosphereProps {
   flashState: 'idle' | 'firing' | 'fading';
 }
 
-export function Atmosphere({ flashState }: AtmosphereProps) {
+export const Atmosphere = memo(function Atmosphere({ flashState }: AtmosphereProps) {
   const flashClass =
     flashState === 'firing'
       ? 'flash-overlay firing'
@@ -17,4 +19,4 @@ export function Atmosphere({ flashState }: AtmosphereProps) {
       <div className={flashClass} aria-hidden="true" />
     </>
   );
-}
+});

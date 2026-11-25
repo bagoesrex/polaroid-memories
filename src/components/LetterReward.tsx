@@ -1,10 +1,12 @@
+import { memo } from 'react';
+
 interface LetterRewardProps {
   visible: boolean;
   recipient: string;
   onOpenLetter: () => void;
 }
 
-export function LetterReward({ visible, recipient, onOpenLetter }: LetterRewardProps) {
+export const LetterReward = memo(function LetterReward({ visible, recipient, onOpenLetter }: LetterRewardProps) {
   return (
     <div className={`letter-reward-wrap ${visible ? 'visible' : ''}`}>
       <span className="reward-label">TERSELIP DI BALIK ROLL FILM</span>
@@ -18,4 +20,4 @@ export function LetterReward({ visible, recipient, onOpenLetter }: LetterRewardP
       </button>
     </div>
   );
-}
+});

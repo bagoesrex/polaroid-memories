@@ -1,8 +1,10 @@
+import { memo } from 'react';
+
 interface ToastProps {
   message: string | null;
 }
 
-export function Toast({ message }: ToastProps) {
+export const Toast = memo(function Toast({ message }: ToastProps) {
   return (
     <div
       className={`toast ${message ? 'show' : ''}`}
@@ -12,4 +14,4 @@ export function Toast({ message }: ToastProps) {
       {message || ''}
     </div>
   );
-}
+});

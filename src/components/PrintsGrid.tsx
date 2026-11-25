@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { KeyboardEvent } from 'react';
 import type { Memory } from '../types';
 
@@ -6,7 +7,7 @@ interface PrintsGridProps {
   onSelectPrint: (index: number) => void;
 }
 
-export function PrintsGrid({ prints, onSelectPrint }: PrintsGridProps) {
+export const PrintsGrid = memo(function PrintsGrid({ prints, onSelectPrint }: PrintsGridProps) {
   const handleKeyDown = (e: KeyboardEvent, index: number) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
@@ -36,4 +37,4 @@ export function PrintsGrid({ prints, onSelectPrint }: PrintsGridProps) {
       ))}
     </div>
   );
-}
+});

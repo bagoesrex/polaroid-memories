@@ -1,6 +1,8 @@
 // Web Audio API procedural sound effects for Polaroid camera
 
 let audioCtx: AudioContext | null = null;
+let cachedClickBuf: AudioBuffer | null = null;
+let cachedPaperBuf: AudioBuffer | null = null;
 
 function ensureAudio(soundEnabled: boolean): AudioContext | null {
   if (!soundEnabled) return null;
@@ -18,19 +20,47 @@ function ensureAudio(soundEnabled: boolean): AudioContext | null {
   return audioCtx;
 }
 
+export function warmupAudio(): void {
+  ensureAudio(true);
+}
+
+function getClickBuffer(ctx: AudioContext): AudioBuffer {
+  if (cachedClickBuf && cachedClickBuf.sampleRate === ctx.sampleRate) {
+    return cachedClickBuf;
+  }
+  const length = Math.floor(ctx.sampleRate * 0.045);
+  const clickBuf = ctx.createBuffer(1, length, ctx.sampleRate);
+  const clickData = clickBuf.getChannelData(0);
+  for (let i = 0; i < length; i++) {
+    clickData[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.008));
+  }
+  cachedClickBuf = clickBuf;
+  return clickBuf;
+}
+
+function getPaperBuffer(ctx: AudioContext): AudioBuffer {
+  if (cachedPaperBuf && cachedPaperBuf.sampleRate === ctx.sampleRate) {
+    return cachedPaperBuf;
+  }
+  const length = Math.floor(ctx.sampleRate * 0.11);
+  const buf = ctx.createBuffer(1, length, ctx.sampleRate);
+  const data = buf.getChannelData(0);
+  for (let i = 0; i < length; i++) {
+    const env = Math.sin((i / length) * Math.PI);
+    data[i] = (Math.random() * 2 - 1) * env * 0.22;
+  }
+  cachedPaperBuf = buf;
+  return buf;
+}
+
 export function playShutterAndMotorSfx(soundEnabled: boolean): void {
   const ctx = ensureAudio(soundEnabled);
   if (!ctx) return;
   const now = ctx.currentTime;
 
-  // 1. Crisp mechanical shutter click (short filtered noise burst)
-  const clickBuf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.045), ctx.sampleRate);
-  const clickData = clickBuf.getChannelData(0);
-  for (let i = 0; i < clickData.length; i++) {
-    clickData[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.008));
-  }
+  // 1. Crisp mechanical shutter click (short filtered noise burst from cached buffer)
   const clickSrc = ctx.createBufferSource();
-  clickSrc.buffer = clickBuf;
+  clickSrc.buffer = getClickBuffer(ctx);
   const clickFilter = ctx.createBiquadFilter();
   clickFilter.type = 'bandpass';
   clickFilter.frequency.value = 1800;
@@ -62,14 +92,8 @@ export function playPaperFlipSfx(soundEnabled: boolean): void {
   const ctx = ensureAudio(soundEnabled);
   if (!ctx) return;
   const now = ctx.currentTime;
-  const buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.11), ctx.sampleRate);
-  const data = buf.getChannelData(0);
-  for (let i = 0; i < data.length; i++) {
-    const env = Math.sin((i / data.length) * Math.PI);
-    data[i] = (Math.random() * 2 - 1) * env * 0.22;
-  }
   const src = ctx.createBufferSource();
-  src.buffer = buf;
+  src.buffer = getPaperBuffer(ctx);
   const filter = ctx.createBiquadFilter();
   filter.type = 'highpass';
   filter.frequency.value = 1400;

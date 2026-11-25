@@ -1,10 +1,12 @@
+import { memo } from 'react';
+
 interface TopBarProps {
   soundEnabled: boolean;
   onToggleSound: () => void;
   onOpenEditor?: () => void;
 }
 
-export function TopBar({ soundEnabled, onToggleSound, onOpenEditor }: TopBarProps) {
+export const TopBar = memo(function TopBar({ soundEnabled, onToggleSound, onOpenEditor }: TopBarProps) {
   return (
     <header className="top-bar">
       {onOpenEditor && (
@@ -25,4 +27,4 @@ export function TopBar({ soundEnabled, onToggleSound, onOpenEditor }: TopBarProp
       </button>
     </header>
   );
-}
+});

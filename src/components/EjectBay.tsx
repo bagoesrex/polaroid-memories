@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { Memory } from '../types';
 
 interface EjectBayProps {
@@ -7,7 +8,7 @@ interface EjectBayProps {
   onCardClick: () => void;
 }
 
-export function EjectBay({
+export const EjectBay = memo(function EjectBay({
   isEjecting,
   isDeveloped,
   memory,
@@ -42,4 +43,4 @@ export function EjectBay({
       </div>
     </div>
   );
-}
+});

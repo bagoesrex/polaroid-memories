@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import type { GiftConfig, Memory, ActiveModal } from './types';
 import { DEFAULT_CONFIG, MEMORIES } from './data/memories';
-import { playShutterAndMotorSfx, playPaperFlipSfx } from './audio/soundEffects';
+import { playShutterAndMotorSfx, playPaperFlipSfx, warmupAudio } from './audio/soundEffects';
 
 import { Atmosphere } from './components/Atmosphere';
 import { TopBar } from './components/TopBar';
@@ -43,7 +43,17 @@ export default function App() {
   const shutterTimersRef = useRef<number[]>([]);
 
   useEffect(() => {
+    const handleFirstTouch = () => {
+      warmupAudio();
+      window.removeEventListener('pointerdown', handleFirstTouch);
+      window.removeEventListener('touchstart', handleFirstTouch);
+    };
+    window.addEventListener('pointerdown', handleFirstTouch, { passive: true });
+    window.addEventListener('touchstart', handleFirstTouch, { passive: true });
+
     return () => {
+      window.removeEventListener('pointerdown', handleFirstTouch);
+      window.removeEventListener('touchstart', handleFirstTouch);
       if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
       shutterTimersRef.current.forEach((id) => clearTimeout(id));
     };
