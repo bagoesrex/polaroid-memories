@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import type { FormEvent, MouseEvent } from 'react';
 import type { GiftConfig } from '../types';
 
@@ -19,15 +19,6 @@ export function EditorModal({
   const [sender, setSender] = useState(config.sender);
   const [stickyNote, setStickyNote] = useState(config.stickyNote);
   const [letterBody, setLetterBody] = useState(config.letterBody);
-
-  useEffect(() => {
-    if (isOpen) {
-      setRecipient(config.recipient);
-      setSender(config.sender);
-      setStickyNote(config.stickyNote);
-      setLetterBody(config.letterBody);
-    }
-  }, [isOpen, config]);
 
   if (!isOpen) return null;
 

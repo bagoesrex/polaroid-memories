@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import type { MouseEvent } from 'react';
 import type { Memory } from '../types';
 
@@ -20,12 +20,6 @@ export function PolaroidModal({
   onPlayFlipSound,
 }: PolaroidModalProps) {
   const [isFlipped, setIsFlipped] = useState(false);
-
-  useEffect(() => {
-    if (isOpen) {
-      setIsFlipped(false);
-    }
-  }, [isOpen, memory]);
 
   if (!isOpen || !memory) return null;
 

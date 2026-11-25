@@ -37,17 +37,13 @@ export function PolaroidCamera({
       ? 'ready-led charging'
       : 'ready-led';
 
-  let hintText = '';
-  if (isBusy) {
-    hintText = `mencetak kenangan #${currentShot + 1}...`;
-  } else if (isRollEmpty) {
-    hintText =
-      'semua foto tercetak — klik foto untuk membalik, atau buka surat di bawah';
-  } else if (currentShot === 0) {
-    hintText = 'tekan tombol merah untuk mencetak kenangan pertama...';
-  } else {
-    hintText = `tersisa ${remainingCount} foto lagi di roll ini — klik foto di bawah untuk membaliknya`;
-  }
+  const hintText = isBusy
+    ? `mencetak kenangan #${currentShot + 1}...`
+    : isRollEmpty
+      ? 'semua foto tercetak — klik foto untuk membalik, atau buka surat di bawah'
+      : currentShot === 0
+        ? 'tekan tombol merah untuk mencetak kenangan pertama...'
+        : `tersisa ${remainingCount} foto lagi di roll ini — klik foto di bawah untuk membaliknya`;
 
   return (
     <div className="camera-stage">

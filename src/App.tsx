@@ -223,6 +223,7 @@ export default function App() {
       <BrandFooter onOpenEditor={() => setActiveModal('editor')} />
 
       <PolaroidModal
+        key={selectedPrintIndex ?? -1}
         isOpen={activeModal === 'polaroid' && selectedPrintIndex !== null}
         memory={
           selectedPrintIndex !== null ? MEMORIES[selectedPrintIndex] : null
@@ -240,6 +241,7 @@ export default function App() {
       />
 
       <EditorModal
+        key={activeModal === 'editor' ? 'editor-open' : 'editor-closed'}
         isOpen={activeModal === 'editor'}
         config={config}
         onSave={handleSaveConfig}
