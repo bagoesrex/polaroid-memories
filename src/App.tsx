@@ -15,6 +15,8 @@ import { EditorModal } from './components/EditorModal';
 import { BrandFooter } from './components/BrandFooter';
 import { Toast } from './components/Toast';
 
+const isDev = import.meta.env.DEV;
+
 export default function App() {
   const [config, setConfig] = useState<GiftConfig>(DEFAULT_CONFIG);
   const [currentShot, setCurrentShot] = useState<number>(0);
@@ -185,7 +187,7 @@ export default function App() {
         <TopBar
           soundEnabled={soundEnabled}
           onToggleSound={handleToggleSound}
-          onOpenEditor={() => setActiveModal('editor')}
+          onOpenEditor={isDev ? () => setActiveModal('editor') : undefined}
         />
 
         <HeroHeader recipient={config.recipient} totalCount={totalShots} />
@@ -233,7 +235,7 @@ export default function App() {
         </section>
       </main>
 
-      <BrandFooter onOpenEditor={() => setActiveModal('editor')} />
+      {isDev && <BrandFooter onOpenEditor={() => setActiveModal('editor')} />}
 
       {activeModal === 'polaroid' && selectedPrintIndex !== null && (
         <PolaroidModal
@@ -257,7 +259,7 @@ export default function App() {
         />
       )}
 
-      {activeModal === 'editor' && (
+      {isDev && activeModal === 'editor' && (
         <EditorModal
           isOpen
           config={config}
