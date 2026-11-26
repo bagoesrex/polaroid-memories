@@ -16,6 +16,7 @@ test('Performance CSS rules applied', async () => {
   assert.ok(css.includes('will-change: transform'), 'will-change transform should be applied to animated elements');
   assert.ok(css.includes('translateZ(0)'), 'GPU layer promotion should be applied');
   assert.ok(!css.includes('blur(4px)'), 'Heavy dynamic blur transition on image should be eliminated');
+  assert.ok(css.includes('.shutter-btn') && css.includes('font-size: inherit;'), 'Shutter button must inherit font-size to scale proportionally with camera and prevent zoom distortion');
 });
 
 test('Production build outputs exist and are optimized', async () => {

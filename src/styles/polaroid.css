@@ -35,6 +35,7 @@
 
     button, [role="button"], a {
       touch-action: manipulation;
+      font-family: inherit;
     }
 
     html, body {
@@ -510,8 +511,9 @@
     }
     .shutter-btn {
       position: relative;
-      width: 3.1em;
-      height: 3.1em;
+      font-size: inherit;
+      width: 2.35em;
+      height: 2.35em;
       border-radius: 50%;
       border: 0.2em solid #cbbca3;
       background: radial-gradient(circle at 35% 30%, #f0654e 0%, var(--shutter-red) 55%, var(--shutter-red-dark) 100%);
